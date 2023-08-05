@@ -1,0 +1,31 @@
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core"]
+
+[tool.poetry]
+authors = ["Jérome Eertmans <jeertmans@icloud.com>"]
+description = "Jingle Box for Tournaments"
+license = "MIT"
+name = "jinglebox"
+readme = "README.md"
+repository = "https://github.com/jeertmans/jinglebox"
+version = "0.1.0"`
+
+[tool.poetry.dependencies]
+pulsectl = "^23.5.2"
+pydantic = "^2.1.1"
+pyside6 = "^6.5.2"
+python = "^3.8,<3.12"
+rtoml = "^0.9.0"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.7.0"
+isort = "^5.12.0"
+mypy = "^1.4.1"
+pre-commit = "^3.3.3"
+ruff = "^0.0.282"
+
+[tool.poetry.plugins]
+
+[tool.poetry.plugins."console_scripts"]
+jinglebox = "jinglebox.__main__:main"

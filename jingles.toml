@@ -1,0 +1,17 @@
+[[jingles]]
+anchor = "start"
+file = 'start.mp3'
+name = 'Start'
+offset = 0.0
+
+[[jingles]]
+anchor = "half"
+file = 'halftime.mp3'
+name = 'Halftime'
+offset = 0.0
+
+[[jingles]]
+anchor = "end"
+file = 'end.mp3'
+name = 'End'
+offset = 0.0
