@@ -2,6 +2,9 @@
 
 A small program that automates playing jingles for sport tournaments.
 
+![Graphical User Interface](https://github.com/jeertmans/jinglebox/assets/27275099/eaa0db1b-4963-419a-9363-b3ce0d687eeb)
+
+
 ## Use case
 
 You are organizing a sport tournament, and games are played every X minutes?
