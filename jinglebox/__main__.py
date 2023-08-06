@@ -9,7 +9,7 @@ from typing import List
 import rtoml
 from pydantic import BaseModel, FilePath, field_serializer
 from PySide6.QtCore import QDateTime, Qt, QTime, QTimer, QUrl
-from PySide6.QtGui import QFont, QIcon
+from PySide6.QtGui import QIcon
 from PySide6.QtMultimedia import QAudioOutput, QMediaPlayer
 from PySide6.QtWidgets import (
     QApplication,
@@ -84,11 +84,6 @@ class QTextEditLogger(logging.Handler):
 class JingleBox(QMainWindow):
     def __init__(self, jingles_path: Path):
         super().__init__()
-
-        # Font stuff
-        font = QFont("Monospace")
-        font.setStyleHint(QFont.Monospace)
-        self.setFont(font)
 
         # Fix ToolTip with dark theme issue
 

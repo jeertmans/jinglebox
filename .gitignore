@@ -2,3 +2,11 @@
 jinglebox/__pycache__/
 
 jingles.toml
+
+jingles/halftime.mp3
+
+jingles/intro.mp3
+
+jingles/one-minute-left.mp3
+
+jingles/time-is-over.mp3
