@@ -1,3 +1,4 @@
+import argparse
 import logging
 import sys
 from datetime import timedelta
@@ -81,7 +82,7 @@ class QTextEditLogger(logging.Handler):
 
 
 class JingleBox(QMainWindow):
-    def __init__(self):
+    def __init__(self, jingles_path: Path):
         super().__init__()
 
         # Font stuff
@@ -147,7 +148,6 @@ class JingleBox(QMainWindow):
 
         # Jingles settings
 
-        jingles_path = Path("jingles.toml")
         jingles_settings = QGroupBox(f"Jingles (from: {jingles_path})")
         self.jingles = Jingles.from_file(jingles_path)
 
@@ -428,14 +428,26 @@ class JingleBox(QMainWindow):
 
 
 def main():
+
+    parser = argparse.ArgumentParser(description="Launches the JingleBox!")
+    parser.add_argument(
+        "jingles_path",
+        nargs="?",
+        metavar="FILE",
+        type=Path,
+        default=Path("jingles.example.toml"),
+        help="Path to jingles' configuration. Defaults to jingles.example.toml",
+    )
+    args = parser.parse_args()
+
     if not QApplication.instance():
         app = QApplication(sys.argv)
     else:
         app = QApplication.instance()
 
-    app.setApplicationName("Jingle Box")
+    app.setApplicationName("JingleBox")
 
-    jingle_box = JingleBox()
+    jingle_box = JingleBox(jingles_path=args.jingles_path)
     jingle_box.show()
 
     sys.exit(app.exec())
