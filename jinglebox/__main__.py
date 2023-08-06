@@ -1,3 +1,4 @@
+import logging
 import sys
 from datetime import timedelta
 from enum import Enum
@@ -17,6 +18,7 @@ from PySide6.QtWidgets import (
     QLabel,
     QLineEdit,
     QMainWindow,
+    QPlainTextEdit,
     QPushButton,
     QSlider,
     QStyle,
@@ -67,6 +69,17 @@ def slider_value_as_percentage(slider: QSlider) -> float:
     return slider.value() / (slider.maximum() - slider.minimum())
 
 
+class QTextEditLogger(logging.Handler):
+    def __init__(self, parent):
+        super().__init__()
+        self.widget = QPlainTextEdit(parent)
+        self.widget.setReadOnly(True)
+
+    def emit(self, record):
+        msg = self.format(record)
+        self.widget.appendPlainText(msg)
+
+
 class JingleBox(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -100,6 +113,7 @@ class JingleBox(QMainWindow):
         break_duration = QTime.fromString("00:05:00", self.time_format)
 
         game_settings = QGroupBox("Game settings")
+        game_settings.setCheckable(True)
         grid = QGridLayout()
 
         grid.addWidget(QLabel("First game at:"), 1, 1)
@@ -188,6 +202,7 @@ class JingleBox(QMainWindow):
         self.muted = False
 
         sound_info = QGroupBox("Sound settings")
+        sound_info.setCheckable(True)
         grid = QGridLayout()
 
         grid.addWidget(QLabel("Music application:"), 1, 1)
@@ -246,9 +261,19 @@ class JingleBox(QMainWindow):
         self.next_game_label = QLabel("")
         grid.addWidget(self.next_game_label, 1, 2)
 
-        grid.addWidget(QLabel("Next jingle:"), 2, 1)
+        grid.addWidget(QLabel("Next jingle at:"), 2, 1)
         self.next_jingle_label = QLabel("")
         grid.addWidget(self.next_jingle_label, 2, 2)
+
+        log_text_box = QTextEditLogger(self)
+        # You can format what is printed to text box
+        log_text_box.setFormatter(
+            logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+        )
+        logging.getLogger().addHandler(log_text_box)
+        # You can control the logging level
+        logging.getLogger().setLevel(logging.DEBUG)
+        grid.addWidget(log_text_box.widget, 3, 1, 1, 2)
 
         game_info.setLayout(grid)
         layout.addWidget(game_info, 2, 2)
@@ -262,7 +287,7 @@ class JingleBox(QMainWindow):
 
         # Set audio levels
 
-        self.application_volume_slider.setValue(99)
+        self.application_volume_slider.setValue(66)
         self.application_volume_muted_slider.setValue(33)
         self.jingles_volume_slider.setValue(99)
 
@@ -272,10 +297,11 @@ class JingleBox(QMainWindow):
 
         self.timer = QTimer()
         self.timer.setInterval(500)
-        self.timer.timeout.connect(self.check_for_jingle)
+        self.timer.timeout.connect(self.check_for_jingle_and_game)
         self.timer.start()
 
     def update_game_settings(self):
+        logging.debug("Game settings have changed, updating...")
         now = QDateTime.currentDateTime()
         end = self.end_datetime.dateTime()
 
@@ -291,7 +317,7 @@ class JingleBox(QMainWindow):
         time_between_games_msecs = game_duration_msecs + break_duration_msecs
 
         while start < now:
-            self.games.append(start)
+            # self.games.append(start)  # We don't add past games :-)
             start = start.addMSecs(time_between_games_msecs)
 
         # TODO: also update after each game ends
@@ -300,6 +326,8 @@ class JingleBox(QMainWindow):
         while start < end:
             self.games.append(start)
             start = start.addMSecs(time_between_games_msecs)
+
+        self.games = self.games[::-1]  # Latest if first
 
         self.update_jingles()
 
@@ -337,23 +365,42 @@ class JingleBox(QMainWindow):
 
         # TODO: only update in one method
         if len(self.planned_jingles) > 0:
-            self.next_jingle_label.setText(self.planned_jingles[-1][1])
+            _, name, datetime = self.planned_jingles[-1]
+            self.next_jingle_label.setText(
+                datetime.toString(self.datetime_format) + f" ({name})"
+            )
         else:
             self.next_jingle_label.setText("no more jingles are planned")
 
-    def check_for_jingle(self):
+    def check_for_jingle_and_game(self):
         now = QDateTime.currentDateTime()
 
+        if len(self.games) > 0 and now > self.games[-1]:
+            logging.debug("We entered a new game, updating next game info.")
+            self.games.pop()
+
+            if len(self.games) > 0:
+                self.next_game_label.setText(
+                    self.games[-1].toString(self.datetime_format)
+                )
+            else:
+                self.next_game_label.setText("no more games are planned")
+
         if len(self.planned_jingles) > 0 and now > self.planned_jingles[-1][2]:
+            logging.debug("We play a new jingle and update next jingle info.")
             file, _, _ = self.planned_jingles.pop()
             self.play_jingle(file)
 
             if len(self.planned_jingles) > 0:
-                self.next_jingle_label.setText(self.planned_jingles[-1][1])
+                _, name, datetime = self.planned_jingles[-1]
+                self.next_jingle_label.setText(
+                    datetime.toString(self.datetime_format) + f" ({name})"
+                )
             else:
                 self.next_jingle_label.setText("no more jingles are planned")
 
     def play_jingle(self, file: Path):
+        logging.debug(f"Playing jingle from file: {file.as_posix()}")
         self.player.setSource(QUrl.fromLocalFile(file.as_posix()))
         self.player.setPosition(0)
         self.muted = True

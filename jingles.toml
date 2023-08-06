@@ -1,17 +1,29 @@
 [[jingles]]
 anchor = "start"
-file = 'start.mp3'
-name = 'Start'
+file = "jingles/1-next-in-one-minute.mp3"
+name = "Next in one minute"
+offset = -60.0
+
+[[jingles]]
+anchor = "start"
+file = "jingles/2-time-is-running.mp3"
+name = "Start"
 offset = 0.0
 
 [[jingles]]
 anchor = "half"
-file = 'halftime.mp3'
-name = 'Halftime'
+file = "jingles/3-halftime.mp3"
+name = "Halftime"
 offset = 0.0
 
 [[jingles]]
 anchor = "end"
-file = 'end.mp3'
-name = 'End'
+file = "jingles/4-one-minute-left.mp3"
+name = "One minute left"
+offset = -60.0
+
+[[jingles]]
+anchor = "end"
+file = "jingles/5-time-is-over.mp3"
+name = "Time is over"
 offset = 0.0

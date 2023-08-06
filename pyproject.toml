@@ -2,6 +2,9 @@
 build-backend = "poetry.core.masonry.api"
 requires = ["poetry-core"]
 
+[tool.isort]
+profile = "black"
+
 [tool.poetry]
 authors = ["Jérome Eertmans <jeertmans@icloud.com>"]
 description = "Jingle Box for Tournaments"
@@ -9,7 +12,7 @@ license = "MIT"
 name = "jinglebox"
 readme = "README.md"
 repository = "https://github.com/jeertmans/jinglebox"
-version = "0.1.0"`
+version = "0.1.0"
 
 [tool.poetry.dependencies]
 pulsectl = "^23.5.2"
