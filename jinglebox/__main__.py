@@ -423,7 +423,6 @@ class JingleBox(QMainWindow):
 
 
 def main():
-
     parser = argparse.ArgumentParser(description="Launches the JingleBox!")
     parser.add_argument(
         "jingles_path",
