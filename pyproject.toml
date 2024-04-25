@@ -16,7 +16,7 @@ version = "0.1.0"
 
 [tool.poetry.dependencies]
 pulsectl = "^23.5.2"
-pydantic = "^2.1.1"
+pydantic = "^2.4.0"
 pyside6 = "^6.5.2"
 python = "^3.8,<3.12"
 rtoml = "^0.9.0"
