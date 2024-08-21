@@ -41,6 +41,7 @@ jobs:
       run: |
         rye config --set-bool behavior.use-uv=true
         rye pin ${{ matrix.pyversion }}
+        rye sync
 
     - name: Build application
       shell: bash
