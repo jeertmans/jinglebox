@@ -26,8 +26,10 @@ from PySide6.QtWidgets import (
     QTimeEdit,
     QWidget,
 )
+from rich.logging import RichHandler
 
-from .utils import set_application_volume
+
+from .utils import set_application_volume, ApplicationNotFound
 
 
 class Anchor(str, Enum):
@@ -84,6 +86,10 @@ class QTextEditLogger(logging.Handler):
 class JingleBox(QMainWindow):
     def __init__(self, jingles_path: Path):
         super().__init__()
+
+        self.logger = logging.getLogger("jinglebox")
+        self.games = []
+        self.planned_jingles = []
 
         # Fix ToolTip with dark theme issue
 
@@ -265,9 +271,9 @@ class JingleBox(QMainWindow):
         log_text_box.setFormatter(
             logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
         )
-        logging.getLogger().addHandler(log_text_box)
+        self.logger.addHandler(log_text_box)
         # You can control the logging level
-        logging.getLogger().setLevel(logging.DEBUG)
+        self.logger.setLevel(logging.DEBUG)
         grid.addWidget(log_text_box.widget, 3, 1, 1, 2)
 
         game_info.setLayout(grid)
@@ -415,7 +421,10 @@ class JingleBox(QMainWindow):
         else:
             volume = slider_value_as_percentage(self.application_volume_slider)
 
-        set_application_volume(application, volume)
+        try:
+            set_application_volume(application, volume)
+        except ApplicationNotFound as err:
+            self.logger.error(str(err))
 
     def set_jingles_volume(self):
         volume = slider_value_as_percentage(self.jingles_volume_slider)
@@ -423,7 +432,6 @@ class JingleBox(QMainWindow):
 
 
 def main():
-
     parser = argparse.ArgumentParser(description="Launches the JingleBox!")
     parser.add_argument(
         "jingles_path",
@@ -434,6 +442,10 @@ def main():
         help="Path to jingles' configuration. Defaults to jingles.example.toml",
     )
     args = parser.parse_args()
+
+    logging.basicConfig(
+        level="NOTSET", format="%(message)s", datefmt="[%X]", handlers=[RichHandler()]
+    )
 
     if not QApplication.instance():
         app = QApplication(sys.argv)

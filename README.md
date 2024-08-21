@@ -20,13 +20,12 @@ occur in real time!
 
 ## How to use
 
-This software requires `Python>3.8` and to be on a Linux distro
+This software requires `Python>=3.9` and to be on a Linux distro
 (at least for reducing the volume of, e.g., Spotify). You will also
-need to clone or copy this repository, and install Poetry.
+need to clone or copy this repository, and install the project with
+`pip install .`.
 
-You can install this package and its dependencies with: `poetry install`.
-
-And you can run the GUI with: `poetry run python -m jinglebox`.
+Then, you can run the GUI with: `jinglebox`.
 
 ## Help
 

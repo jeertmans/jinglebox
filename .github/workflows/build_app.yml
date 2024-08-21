@@ -1,0 +1,53 @@
+name: Build application executable
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  builds:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+        pyversion: ['3.9']
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Rye
+      if: matrix.os != 'windows-latest'
+      env:
+        RYE_TOOLCHAIN_VERSION: ${{ matrix.pyversion}}
+        RYE_INSTALL_OPTION: --yes
+      run: |
+        curl -sSf https://rye.astral.sh/get | bash
+        echo "$HOME/.rye/shims" >> $GITHUB_PATH
+
+    # Stolen from https://github.com/bluss/pyproject-local-kernel/blob/2b641290694adc998fb6bceea58d3737523a68b7/.github/workflows/ci.yaml
+    - name: Install Rye (Windows)
+      if: matrix.os == 'windows-latest'
+      shell: bash
+      run: |
+        C:/msys64/usr/bin/wget.exe -q 'https://github.com/astral-sh/rye/releases/latest/download/rye-x86_64-windows.exe' -O rye-x86_64-windows.exe
+        ./rye-x86_64-windows.exe self install --toolchain-version ${{ matrix.pyversion }} --modify-path -y
+        echo "$HOME\\.rye\\shims" >> $GITHUB_PATH
+
+    - name: Configure Rye
+      shell: bash
+      run: |
+        rye config --set-bool behavior.use-uv=true
+        rye pin ${{ matrix.pyversion }}
+
+    - name: Build application
+      shell: bash
+      run: rye run pyinstaller -F jinglebox_app.py --name=jinglebox
+
+    - name: Upload executable
+      uses: actions/upload-artifact@v4
+      with:
+        name: jinglebox-${{ matrix.os }}-${{ matrix.pyversion }}
+        path: dist/*
