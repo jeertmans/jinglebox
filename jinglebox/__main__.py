@@ -16,6 +16,7 @@ from PySide6.QtWidgets import (
     QDateTimeEdit,
     QGridLayout,
     QGroupBox,
+    QFileDialog,
     QLabel,
     QLineEdit,
     QMainWindow,
@@ -454,7 +455,16 @@ def main():
 
     app.setApplicationName("JingleBox")
 
-    jingle_box = JingleBox(jingles_path=args.jingles_path)
+    if not args.jingles_path.exists():
+        filename, _ = QFileDialog.getOpenFileName(
+            caption="Select Jingles' configuration file",
+            filter="Jingles Config Files (*.toml)",
+        )
+        jingles_path = Path(filename)
+    else:
+        jingles_path = args.jingles_path
+
+    jingle_box = JingleBox(jingles_path=jingles_path)
     jingle_box.show()
 
     sys.exit(app.exec())
