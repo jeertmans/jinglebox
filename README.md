@@ -54,7 +54,8 @@ If you are a non-programmer, the easiest way to use this application is to downl
 a pre-built executable. The file is relatively large, but should run the app
 without any extra installation from yourself!
 
-Click on the icon corresponding to your OS to download the latest version of JingleBox:
+Click on the icon corresponding to your OS to download the latest version of JingleBox,
+as well as example jingles:
 
 <table>
   <tr>
@@ -71,10 +72,21 @@ Click on the icon corresponding to your OS to download the latest version of Jin
 
 ### Install locally with Python
 
-This projects requires `Python>=3.9`. After cloning the repository locally,
+This projects requires `Python>=3.10`. After cloning the repository locally,
 you can simply install the application with `pip install .`.
 
 Then, you can run the application with: `jinglebox`.
+
+### How it works
+
+The application works with two possible states:
+
+1. *Music*: the music is played at its default level when no jingles are played;
+2. *Jingle*: the music level is reduced, and a jingle is played **on top**,
+   and the music is put back to its previous level.
+
+Depending on the parameters chosen for the games, such as the duration, the
+software will automatically switch between (1) and (2), until the last game is played.
 
 ## Help
 
