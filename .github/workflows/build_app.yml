@@ -50,7 +50,7 @@ jobs:
     - name: Copy example files to dist/
       shell: bash
       run: |
-        cp jingles.examples.toml dist/
+        cp jingles.example.toml dist/
         cp -R jingles/ dist/
 
     - name: Upload executable
