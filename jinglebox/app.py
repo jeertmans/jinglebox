@@ -1,5 +1,4 @@
 import os
-import argparse
 import logging
 import sys
 from datetime import timedelta
@@ -30,34 +29,33 @@ from PySide6.QtWidgets import (
 )
 
 
-
 class ApplicationNotFound(Exception):
     def __init__(self, application_name: str, applications_found: list[str]):
         super().__init__(
             f"Could not find any sound application named '{application_name}'. Available applications names are: {', '.join(applications_found)}."
         )
 
+
 if os.name == "nt":
     from pycaw.pycaw import AudioUtilities
 
     def set_application_volume(application: str, volume: float):
-    
         sessions = [
             session for session in AudioUtilities.GetAllSessions() if session.Process
         ]
-    
+
         try:
             session = next(
                 session
                 for session in sessions
                 if application.lower() in session.Process.name().lower()
             )
-    
+
             volume = session.SimpleAudioVolume
             min_vol, max_vol = volume.GetVolumeRange()
             volume_level = volume * (max_vol - min_vol) + min_vol
             volume.SetMasterVolumeLevel(volume_level, None)
-    
+
         except StopIteration:
             applications_found = [session.Process.name() for session in sessions]
             raise ApplicationNotFound(application, applications_found) from None
@@ -66,28 +64,26 @@ elif os.name == "posix":
     from pulsectl import Pulse
 
     def set_application_volume(application: str, volume: float):
-    
         with Pulse("set-application-volume") as pulse:
             sinks = pulse.sink_input_list()
-    
+
             try:
                 sink = next(
                     sink for sink in sinks if application.lower() in sink.name.lower()
                 )
-    
+
                 volume_struct = sink.volume
                 volume_struct.value_flat = volume
                 pulse.volume_set(sink, volume_struct)
-    
+
             except StopIteration:
                 applications_found = [sink.name for sink in sinks]
                 raise ApplicationNotFound(application, applications_found) from None
-    
+
 
 else:
     msg = f"Unsupported operating system: '{os.name}'."
     raise ImportError(msg)
-
 
 
 class Anchor(str, Enum):
@@ -488,7 +484,7 @@ class JingleBox(QMainWindow):
         self.audio_output.setVolume(volume)
 
 
-def run_app(jingles_path=Path | None):
+def run_app(jingles_path: Path | None = None):
     if not QApplication.instance():
         app = QApplication(sys.argv)
     else:
@@ -508,3 +504,6 @@ def run_app(jingles_path=Path | None):
 
     sys.exit(app.exec())
 
+
+if __name__ == "__main__":
+    run_app()

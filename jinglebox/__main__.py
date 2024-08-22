@@ -26,5 +26,6 @@ def main():
 
     run_app(jingles_path=args.jingles_path)
 
+
 if __name__ == "__main__":
     main()
