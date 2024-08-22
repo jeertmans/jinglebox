@@ -12,7 +12,7 @@ You are organizing a sport tournament, and games are played every X minutes?
 JingleBox can play jingles for every game,
 at very precise time moments.
 If you are using another software for playing music during the whole event
-(e.g., *Spotify*), then it will automatically reduce its volume when jingles
+(e.g., *Chrome*), then it will automatically reduce its volume when jingles
 are played.
 
 All the parameters can be modified through the program, and changes will
@@ -26,11 +26,15 @@ on your computer.
 The requirements are:
 - a computer running Windows, Linux, or macOS;
 - an application playing music in the background
-  (by default, it assumes that you use the *Spotify* desktop application,
-  but it can be *Spotify inside your web browser*, videos on *Youtube*, etc.);
+  (by default, it assumes that you use the *Chrome* web browser to play sound, e.g.,
+  on *Spotify* or *YouTube*, but you could use any other application,
+  such as the *Spotify* desktop application directly[^1]);
 - a TOML config file describing **what jingles** should be played and **when**, see
   [`jingles.example.toml`](./jingles.example.toml);
 - and, of course, the soundfiles with the audio samples to play for each jingle.
+
+[^1]: It has been observed on Windows that controlling the sound level of
+  the *Spotify* desktop application does not work, while inside *Chrome* yes.
 
 > [!IMPORTANT]
 >
