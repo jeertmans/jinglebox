@@ -45,7 +45,7 @@ jobs:
 
     - name: Build application
       shell: bash
-      run: rye run pyinstaller -F jinglebox/app.py --name=jinglebox
+      run: rye run pyinstaller -F jinglebox/app.py --name=jinglebox --windowed
 
     - name: Copy example files to dist/
       shell: bash
