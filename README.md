@@ -83,7 +83,7 @@ chmod +x jinglebox
 #### Windows
 
 On the first execution, Windows will warn you about this software being **untrusted**.
-You can safely ignore the warning and run the application.
+You can safely ignore the warning by clicking on "*More info*" and "*Run anyway*".
 
 ### Install locally with Python
 
