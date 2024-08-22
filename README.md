@@ -70,6 +70,21 @@ as well as example jingles:
   </tr>
 </table>
 
+#### Linux / macOS
+
+To execute the application, you may need to make the file *executable*,
+this can either be done with a *right click* and a change in the file permissions,
+or in the command line:
+
+```bash
+chmod +x jinglebox
+```
+
+#### Windows
+
+On the first execution, Windows will warn you about this software being **untrusted**.
+You can safely ignore the warning and run the application.
+
 ### Install locally with Python
 
 This projects requires `Python>=3.10`. After cloning the repository locally,
