@@ -51,10 +51,8 @@ if os.name == "nt":
                 if application.lower() in session.Process.name().lower()
             )
 
-            volume = session.SimpleAudioVolume
-            min_vol, max_vol = volume.GetVolumeRange()
-            volume_level = volume * (max_vol - min_vol) + min_vol
-            volume.SetMasterVolumeLevel(volume_level, None)
+            interface = session.SimpleAudioVolume
+            interface.SetMasterVolume(volume, None)
 
         except StopIteration:
             applications_found = [session.Process.name() for session in sessions]
@@ -279,7 +277,7 @@ class JingleBox(QMainWindow):
                 f"{text}'s volume (muted):"
             )
         )
-        self.application_name.setText("Spotify")
+        self.application_name.setText("chrome")
 
         self.application_volume_slider = QSlider(Qt.Horizontal)
         self.application_volume_muted_slider = QSlider(Qt.Horizontal)
